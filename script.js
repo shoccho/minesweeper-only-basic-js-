@@ -35,7 +35,7 @@ function numbering(){
  				c++;
  			}
  			if(c>0 &&  board[i][j]!='x'){
- 				document.getElementById("tile"+i+"_"+j).innerHTML=c;
+ 				board[i][j]=c;
  			}
  		}	
 	}
@@ -51,20 +51,21 @@ function Create2DArray(rows){
   return board;
 }
 function lef(i,j){
-	while(j >=0 && document.getElementById("tile"+i+"_"+j).innerHTML!="X"){
+	console.log("left called");
+	while(j >=0 && board[i][j]!='x'){
 		transform(document.getElementById("tile"+i+"_"+j));
 		
-		if(document.getElementById("tile"+i+"_"+j).innerHTML!=""){
+		if(board[i][j]!=undefined){
 			break;
 		}
 		j--;
 	}
 }
 function right(i,j){
-	while(j<8 && document.getElementById("tile"+i+"_"+j).innerHTML!="X"){
+	while(j<8 && board[i][j]!="x"){
 		transform(document.getElementById("tile"+i+"_"+j));
 		
-		if(document.getElementById("tile"+i+"_"+j).innerHTML!=""){
+		if(board[i][j]!=undefined){
 			break;
 		}
 		j++;
@@ -75,22 +76,22 @@ function reveal(x){
 	console.log(x);
 	var i=x[4];
 	var j=x[6];
-	while(i>=0 && document.getElementById("tile"+i+"_"+j).innerHTML!="X"){
+	while(i>=0 && board[i][j]!="x"){
 			lef(i,j);
 			right(i,j);
 		
-		if(document.getElementById("tile"+i+"_"+j).innerHTML!=""){
+		if(board[i][j]!=undefined){
 			break;
 		}
 		i--;
 	}
 	var i=x[4];
 	var j=x[6];
-	while(i<8 && document.getElementById("tile"+i+"_"+j).innerHTML!="X"){
+	while(i<8 && board[i][j]!="x"){
 		lef(i,j);
 		right(i,j);
 		
-		if(document.getElementById("tile"+i+"_"+j).innerHTML!=""){
+		if(board[i][j]!=undefined){
 			break;
 		}
 		i++;
@@ -99,7 +100,13 @@ function reveal(x){
 function transform(x){
 	x.style["color"]="#0215FC";
 	x.style["font-weight"]="bold";
-	x.style["background-color"]="#111111";
+	x.style["background-color"]="#BBBBBB";
+	x.style["border-style"]="inset";
+	var i=x.id[4];
+	var j=x.id[6];
+	if(board[i][j]==undefined)return;
+	x.innerHTML=board[i][j];
+
 }
 function allshow(){
 	z=document.getElementsByClassName("tiles");
@@ -119,7 +126,9 @@ function show(){
 			deffuse = false;
 		}
 	}
-	if(this.innerHTML=='X'){
+	var i=this.id[4];
+	var j=this.id[6];
+	if(board[i][j]=='x'){
 		if(deffuse){
 			deffuse_bomb(this);
 			return;
@@ -128,10 +137,7 @@ function show(){
 		alert("Game Over!");
 	}
 	transform(this);
-	//this.style["color"]="#0215FC";
-	//this.style["font-weight"]="bold";
-	//this.style["background-color"]="#8C8B8B";
-	//this.style["vertical-align"]="middle";
+	
 
 }
 function new_tiles(){ 
@@ -143,23 +149,21 @@ function new_tiles(){
 			
 			var a= document.createElement("div");
 		 	
-		 	a.style["background-color"]="white";
+		 	a.style["background-color"]="#EEEEEE";
 		 	a.style["height"]="50px";
 		 	a.style["width"]="50px";
 		 	a.style["float"]="left";
-		 	a.style["border-color"]="black";
-		 	a.style["border-style"]="solid";
-		 	a.style["border-width"]="1px";
+		 	a.style["border-style"]="outset";
+		 	a.style["border-width"]="4px";
 		 	a.style["display"]="flex";
 		 	a.style["align-items"]="center";
 		 	a.style["justify-content"]="center";
 		 	a.className="tiles";
 		 	a.id="tile"+i+"_"+j;
-		 	a.style["color"]="white";
 		 	a.addEventListener('click',show);
 		 	if (getRndInteger(0,9)==getRndInteger(0,9)){
 		 		
-		 		a.innerHTML="X";
+		 		
 		 	store(i,j);
 		 	}
 		 	document.getElementById("frame").appendChild(a);
